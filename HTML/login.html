@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Open-Space Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="mqtt.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Page de Connexion</h1>
+    </header>
+    <div id="loginPage">
+    <center>
+        <section>
+            <img src="openspace.png" alt="Logo Open-Space" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <form id="loginForm" onsubmit="return mqttLogin(event)">
+                <label for="username">Nom d'utilisateur: </label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Mot de passe: </label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p id="loginError" style="color: red;"></p>
+        </section>
+    </center>
+    </div>
+
+    <div id="mainPage" style="display: none;">
+        <nav>
+            <a href="gestion.html">Inventaire des Outils</a>
+            <a href="logs.html">Admin</a>
+            <a href="monitoring.html">Qui sommes-nous</a>
+            <a href="reservation.html">Contactez-nous</a>
+            <button onclick="logout()">Déconnexion</button>
+        </nav>
+
+        <main>
+            <h2>Bienvenue dans l'application de gestion de OpenSpace</h2>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Open-Space Management</p>
+    </footer>
+</body>
+</html>

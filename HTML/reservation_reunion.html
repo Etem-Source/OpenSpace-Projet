@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservations de Réunion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Réservations de Réunion</h1>
+    <button class="logout-button" onclick="window.location.href='reservation.html'">Exit</button>
+    <table id="reservationsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom d'utilisateur</th>
+                <th>Date</th>
+                <th>Heure de début</th>
+                <th>Heure de fin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Les réservations seront insérées ici dynamiquement -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fonction pour charger les réservations depuis le serveur
+        async function loadReservations() {
+            const response = await fetch('get_reservation_reunion.php'); // Assurez-vous que le chemin est correct
+            const reservations = await response.json();
+
+            const tableBody = document.querySelector('#reservationsTable tbody');
+            tableBody.innerHTML = '';  // Réinitialise le contenu de la table
+
+            reservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.id}</td>
+                    <td>${reservation.username}</td>
+                    <td>${reservation.date}</td>
+                    <td>${reservation.start_time}</td>
+                    <td>${reservation.end_time}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Charger les réservations au chargement de la page
+        window.onload = loadReservations;
+    </script>
+
+</body>
+</html>

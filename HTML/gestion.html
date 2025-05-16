@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Open-Space</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="mqtt.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="gestion.html">Gestion</a></li>
+                <li><a href="logs.html">Logs</a></li>
+                <li><a href="reservation.html">Réservations</a></li>
+                <li><a href="monitoring.html">Monitoring</a></li>
+            </ul>
+        </nav>
+        <button class="logout-button" onclick="window.location.href='login.html'">Déconnexion</button>
+    </header>
+    <section>
+        <h2>Réglages des seuils</h2>
+        <form id="thresholdForm">
+            <label for="temperatureThreshold">Température seuil (°C): </label>
+            <input type="number" id="temperatureThreshold" name="temperatureThreshold">
+            <button type="button" id="updateTemperatureButton">Actualiser Température</button>
+            
+            <label for="co2Threshold">CO2 seuil (ppm): </label>
+            <input type="number" id="co2Threshold" name="co2Threshold">
+            <button type="button" id="updateCO2Button">Actualiser CO2</button>
+            
+            <label for="lightThreshold">Luminosité seuil (Lux): </label>
+            <input type="number" id="lightThreshold" name="lightThreshold">
+            <button type="button" id="updateLightButton">Actualiser Luminosité</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2025 Open-Space Management</p>
+    </footer>
+</body>
+</html>

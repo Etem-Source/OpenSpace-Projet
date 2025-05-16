@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs de Température</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dernières 24 données enregistrées</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Moyenne</th>
+                <th>Zone Réunion</th>
+                <th>Zone Bureau</th>
+                <th>Zone Détente</th>
+                <th>Date et Heure</th>
+            </tr>
+        </thead>
+        <tbody id="logs-table">
+            <!-- Les données seront insérées ici -->
+        </tbody>
+    </table>
+
+    <script>
+        // Charger les données via AJAX
+        fetch('get_logs.php')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('logs-table');
+                if (data.error) {
+                    tableBody.innerHTML = `<tr><td colspan="6">Erreur : ${data.error}</td></tr>`;
+                } else {
+                    tableBody.innerHTML = data.map(row => `
+                        <tr>
+                            <td>${row.Temp_ID}</td>
+                            <td>${row.Moy}</td>
+                            <td>${row.Zone_Reunion}</td>
+                            <td>${row.Zone_Bureau}</td>
+                            <td>${row.Zone_Detente}</td>
+                            <td>${row.Date_Heure}</td>
+                        </tr>
+                    `).join('');
+                }
+            })
+            .catch(error => {
+                document.getElementById('logs-table').innerHTML = `<tr><td colspan="6">Erreur : ${error.message}</td></tr>`;
+            });
+    </script>
+</body>
+</html>

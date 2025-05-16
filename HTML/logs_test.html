@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs des Capteurs</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+
+    <h1>Logs des Capteurs de Température</h1>
+    <button class="logout-button" onclick="window.location.href='logs.html'">Exit</button>
+    <table id="logsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Moyenne</th>
+                <th>Zone Réunion</th>
+                <th>Zone Bureau</th>
+                <th>Zone Détente</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Les logs seront insérés ici dynamiquement -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fonction pour charger les logs depuis le serveur
+        async function loadLogs() {
+            const response = await fetch('get_logs.php'); // Assurez-vous que le chemin est correct
+            const logs = await response.json();
+
+            const tableBody = document.querySelector('#logsTable tbody');
+            tableBody.innerHTML = '';  // Réinitialise le contenu de la table
+
+            logs.forEach(log => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${log.Temp_ID}</td>
+                    <td>${log.Moy}</td>
+                    <td>${log.Zone_Reunion}</td>
+                    <td>${log.Zone_Bureau}</td>
+                    <td>${log.Zone_Detente}</td>
+                    <td>${new Date(log.Date_Heure).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Charger les logs au chargement de la page
+        window.onload = loadLogs;
+    </script>
+
+</body>
+</html>

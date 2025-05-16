@@ -1,0 +1,38 @@
+#include "log.h"
+
+Log::Log(QWidget *parent)
+    : QWidget(parent)
+{
+    webView = new QWebEngineView(this);
+    webView->load(QUrl("http://ton-serveur-distant.com/page.php"));  // Change ici l'URL
+    webView->resize(this->size());
+
+    // Pour s'assurer que le QWebEngineView occupe tout l'espace
+    webView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    webView->show();
+}
+
+Log::~Log() {}
+
+
+LOG.h
+
+#ifndef LOG_H
+#define LOG_H
+
+#include <QWidget>
+#include <QWebEngineView>
+
+class Log : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit Log(QWidget *parent = nullptr);
+    ~Log();
+
+private:
+    QWebEngineView *webView;
+};
+
+#endif // LOG_H
