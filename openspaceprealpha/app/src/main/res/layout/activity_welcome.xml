@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/soft_white"
+    android:padding="16dp">
+
+    <!-- Logo en haut à gauche, plus bas -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="160dp"
+        android:layout_height="45dp"
+        android:src="@drawable/logo"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- Icône utilisateur et texte en haut à droite, plus bas -->
+    <LinearLayout
+        android:id="@+id/user_info_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:background="@drawable/edit_text_background">
+
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/user"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="18sp"
+            android:textColor="@color/dark_blue" />
+    </LinearLayout>
+
+    <!-- Boutons de réservation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/reserveMeetingButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Réserver Réunion"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/reserveOfficeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Réserver Bureau"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+    </LinearLayout>
+
+    <!-- Copyright en bas de l'écran -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="© 2025 OpenSpace - Tout Droits Réservés"
+        android:textAlignment="center"
+        android:textColor="@color/light_blue"
+        android:textSize="12sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp" />
+</RelativeLayout>

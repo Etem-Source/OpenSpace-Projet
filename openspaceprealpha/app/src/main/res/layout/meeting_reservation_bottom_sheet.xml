@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bottom_sheet_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Titre -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Réservation Réunion"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/dark_blue"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Calendrier pour sélectionner la date -->
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+    android:id="@+id/calendarView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:mcv_showOtherDates="all"
+    app:mcv_selectionColor="@color/light_blue"
+    app:mcv_arrowColor="@color/dark_blue"/>
+
+
+    <!-- Conteneur horizontal pour les éléments de temps -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Texte "De" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="De"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:textColor="@color/dark_blue"/>
+
+        <!-- Sélecteur d'heure de début -->
+        <Spinner
+            android:id="@+id/hourSpinnerStart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            style="@style/SpinnerItemStyle" />
+
+        <!-- Texte "à" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="à"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:textColor="@color/dark_blue"/>
+
+        <!-- Sélecteur d'heure de fin -->
+        <Spinner
+            android:id="@+id/hourSpinnerEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            style="@style/SpinnerItemStyle" />
+    </LinearLayout>
+
+    <!-- Bouton de confirmation -->
+    <Button
+        android:id="@+id/confirmReservationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirmer Réservation"
+        android:backgroundTint="@color/light_blue"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_gravity="center" />
+</LinearLayout>

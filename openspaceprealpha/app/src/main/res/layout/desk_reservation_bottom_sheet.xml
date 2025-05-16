@@ -1,0 +1,167 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bottom_sheet_background">
+
+    <!-- Titre -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Réservation Bureau"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/dark_blue"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Bouton pour voir le plan -->
+    <Button
+        android:id="@+id/viewPlanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voir le plan"
+        android:backgroundTint="@color/light_blue"
+        android:textColor="@android:color/white"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Section numéro de bureau (visible initialement) -->
+    <LinearLayout
+        android:id="@+id/officeSelectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Numéro de bureau:"
+                android:padding="8dp"
+                android:textColor="@color/dark_blue" />
+
+            <Spinner
+                android:id="@+id/officeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SpinnerItemStyle" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/continueButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continuer"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <!-- Section détails réservation (invisible au départ) -->
+    <LinearLayout
+        android:id="@+id/reservationDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sélectionnez les dates de réservation"
+            android:textColor="@color/dark_blue"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Affichage des dates sélectionnées -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Du: "
+                android:textColor="@color/dark_blue"/>
+
+            <TextView
+                android:id="@+id/startDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Non sélectionnée"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" au: "
+                android:textColor="@color/dark_blue"
+                android:layout_marginStart="16dp"/>
+
+            <TextView
+                android:id="@+id/endDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Non sélectionnée"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
+        <!-- Calendrier pour sélectionner la date -->
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mcv_showOtherDates="all"
+            app:mcv_selectionColor="@color/light_blue"
+            app:mcv_arrowColor="@color/dark_blue"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Horaires -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horaires :"
+                android:padding="8dp"
+                android:textColor="@color/dark_blue" />
+
+            <Spinner
+                android:id="@+id/hourSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:popupBackground="@android:color/white"
+                android:spinnerMode="dropdown"
+                android:backgroundTint="@android:color/black" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/confirmOfficeReservationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmer Réservation"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</LinearLayout>

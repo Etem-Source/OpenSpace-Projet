@@ -1,0 +1,138 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/soft_white"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <!-- Logo en haut -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Container avec ombre pour les champs de saisie -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/soft_white"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <!-- Champ Utilisateur avec icône -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:background="@drawable/edit_text_background"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/user"
+                android:layout_marginEnd="8dp"
+                android:tint="@color/light_blue" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Utilisateur"
+                android:inputType="text"
+                android:textSize="14sp"
+                android:textColor="@color/text_color"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:background="@drawable/edit_text_no_underline"
+                style="@style/HintStyle" />
+        </LinearLayout>
+
+        <!-- Champ Mot de passe avec icône -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:background="@drawable/edit_text_background"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/password_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/password"
+                android:layout_marginEnd="8dp"
+                android:tint="@color/light_blue" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Mot de passe"
+                android:inputType="textPassword"
+                android:textSize="14sp"
+                android:textColor="@color/text_color"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:background="@drawable/edit_text_no_underline"
+                style="@style/HintStyle" />
+        </LinearLayout>
+
+        <!-- Case à cocher "Se souvenir de moi" avec le style standard -->
+        <!-- Case à cocher "Se souvenir de moi" -->
+        <CheckBox
+            android:id="@+id/rememberMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Se souvenir de moi"
+            android:textColor="@color/text_color"
+            android:layout_marginBottom="16dp" />
+
+
+
+    </LinearLayout>
+
+    <!-- Bouton Se connecter -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/light_blue"
+        android:minWidth="200dp"
+        android:padding="12dp"
+        android:text="Se connecter"
+        android:textAllCaps="false"
+        android:elevation="4dp"
+        android:textColor="@android:color/white" />
+
+    <!-- Texte de mot de passe oublié -->
+
+    <!-- Espace modéré avant le copyright -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <!-- Copyright -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2025 OpenSpace - Tout Droits Réservés"
+        android:textColor="@color/light_blue"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+</LinearLayout>

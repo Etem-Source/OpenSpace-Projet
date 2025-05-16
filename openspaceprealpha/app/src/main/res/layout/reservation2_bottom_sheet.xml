@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bottom_sheet_background">
+
+    <!-- Conteneur pour le titre et l'icône -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_background"
+        android:padding="8dp">
+
+        <!-- Icône à gauche du titre -->
+        <ImageView
+            android:id="@+id/reservationIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_office"/>
+
+        <!-- Titre pour les réservations bureaux -->
+        <TextView
+            android:id="@+id/reservationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  Bureaux"
+            android:textSize="20sp"
+            android:textColor="@color/dark_blue"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Bouton pour afficher les réservations passées -->
+    <Button
+        android:id="@+id/pastReservationsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Réservations passées"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/light_blue"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Message de réservation -->
+    <TextView
+        android:id="@+id/reservationMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vos réservations apparaîtront ici."
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_gravity="center"
+        android:padding="16dp" />
+
+    <!-- ScrollView pour les réservations -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/reservationsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Conteneur pour les réservations -->
+        <LinearLayout
+            android:id="@+id/reservationsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

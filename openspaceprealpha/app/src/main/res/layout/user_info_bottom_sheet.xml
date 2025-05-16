@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bottom_sheet_background">
+
+    <!-- Logo utilisateur et nom d'utilisateur en haut au centre -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_background">
+
+        <ImageView
+            android:id="@+id/user_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/user"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/usernameHeaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Utilisateur"
+            android:textSize="18sp"
+            android:textColor="@color/dark_blue" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/nomTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/actualNomTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom"
+        android:textSize="16sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/prenomTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prénom"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/actualPrenomTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prénom"
+        android:textSize="16sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/ageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Âge"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/actualAgeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Âge"
+        android:textSize="16sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/actualEmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="16sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Utilisateur"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/actualUsernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Utilisateur"
+        android:textSize="16sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
+</LinearLayout>

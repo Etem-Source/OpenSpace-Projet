@@ -1,0 +1,34 @@
+<resources>
+
+
+
+
+        <!-- Style personnalisé pour les éléments du Spinner -->
+        <style name="SpinnerItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+            <item name="android:textColor">@color/dark_blue</item>
+        </style>
+
+        <!-- Style personnalisé pour le CalendarView -->
+        <style name="CalenderViewCustom" parent="Theme.AppCompat">
+            <item name="colorControlActivated">@color/light_blue</item>
+            <item name="android:textColorPrimary">@color/dark_blue</item>
+        </style>
+
+        <!-- Apparence du texte pour les jours de la semaine -->
+        <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+            <item name="android:textColor">@color/dark_blue</item>
+        </style>
+
+        <!-- Apparence du texte pour les dates -->
+        <style name="CalenderViewDateCustomText" parent="android:TextAppearance.Material.Body1">
+            <item name="android:textColor">@drawable/calender_date_selector</item>
+        </style>
+
+
+
+
+
+    <style name="HintStyle">
+        <item name="android:textColorHint">@color/hint_color</item>
+    </style>
+</resources>
