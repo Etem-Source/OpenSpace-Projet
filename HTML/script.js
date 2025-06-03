@@ -220,8 +220,7 @@ function sendPageMonitoringRequest() {
     }, 5000);
 }
 
-
-
+// Fonction mise à jour température
 function updateTemperature() {
     const temperatureThreshold = document.getElementById('temperatureThreshold').value;
 
@@ -236,6 +235,8 @@ function updateTemperature() {
                 console.error("Erreur lors de l'envoi de la température :", err);
             } else {
                 console.log(`Température actualisée publiée : ${temperatureThreshold}`);
+                seuilTemperature = Number(temperatureThreshold);
+                seuilTemperatureTimestamp = Date.now();
             }
         });
     } else {
@@ -243,6 +244,7 @@ function updateTemperature() {
     }
 }
 
+// Fonction mise à jour CO2
 function updateCO2() {
     const co2Threshold = document.getElementById('co2Threshold').value;
 
@@ -264,6 +266,8 @@ function updateCO2() {
                 console.error("Erreur lors de l'envoi du CO2 :", err);
             } else {
                 console.log(`CO2 actualisé publié : ${co2Threshold}`);
+                seuilCO2 = co2Value;
+                seuilCO2Timestamp = Date.now();
             }
         });
     } else {
@@ -271,6 +275,7 @@ function updateCO2() {
     }
 }
 
+// Fonction mise à jour luminosité
 function updateLight() {
     const lightThreshold = document.getElementById('lightThreshold').value;
 
@@ -285,11 +290,29 @@ function updateLight() {
                 console.error("Erreur lors de l'envoi de la luminosité :", err);
             } else {
                 console.log(`Luminosité actualisée publiée : ${lightThreshold}`);
+                seuilLight = Number(lightThreshold);
+                seuilLightTimestamp = Date.now();
             }
         });
     } else {
         console.error("Le client MQTT n'est pas connecté au broker.");
     }
+}
+
+// Gestionnaires d'événements pour les boutons de seuils (avec les bons IDs)
+const tempButton = document.getElementById('updateTemperatureButton');
+if (tempButton) {
+    tempButton.addEventListener('click', updateTemperature);
+}
+
+const co2Button = document.getElementById('updateCO2Button');
+if (co2Button) {
+    co2Button.addEventListener('click', updateCO2);
+}
+
+const lightButton = document.getElementById('updateLightButton');
+if (lightButton) {
+    lightButton.addEventListener('click', updateLight);
 }
 
 // Gestionnaire d'événement pour le formulaire de connexion
@@ -303,18 +326,3 @@ if (loginForm) {
     });
 }
 
-// Gestionnaires d'événements pour les boutons de seuils (si présents)
-const tempButton = document.getElementById('updateTemperatureBtn');
-if (tempButton) {
-    tempButton.addEventListener('click', updateTemperature);
-}
-
-const co2Button = document.getElementById('updateCO2Btn');
-if (co2Button) {
-    co2Button.addEventListener('click', updateCO2);
-}
-
-const lightButton = document.getElementById('updateLightBtn');
-if (lightButton) {
-    lightButton.addEventListener('click', updateLight);
-}
