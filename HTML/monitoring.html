@@ -8,7 +8,6 @@
     <script src="mqtt.min.js"></script>
     <script src="script.js" defer></script>
     <style>
-        /* Style de l'alerte modale */
         .alert-modal {
             display: none;  /* Par défaut, l'alerte est cachée */
             position: fixed;
@@ -66,7 +65,7 @@
         }
     </style>
 </head>
-<body onload="sendPageMonitoringRequest()">
+<body onload="sendSignalSeuils()">
     <header>
         <nav>
             <ul>
@@ -93,111 +92,6 @@
     <footer>
         <p>&copy; 2025 Open-Space Management</p>
     </footer>
-
-    <!-- Alerte modale -->
-    <div class="alert-modal" id="alertModal">
-        <div class="alert-box">
-            <h1>Alerte CO₂</h1>
-            <p>Le niveau de CO₂ est trop élevé et dépasse le seuil de sécurité !</p>
-            <p><a href="gestion.html">Retour à la page de gestion</a></p>
-            <button class="close-btn" id="closeAlertBtn">Fermer l'alerte</button>
-        </div>
     </div>
-    <center>
-        <br><br><br><br>
-        <img src="openspace.png" alt="Logo Open-Space" style="width: 900px; height: auto; margin-bottom: 30px;">
-    </center>
-
-    <script>
-        // Connexion au broker MQTT
-        const client = mqtt.connect("ws://192.168.29.55:9001");
-
-        // Lors de la connexion, abonnez-vous aux topics nécessaires
-        client.on('connect', function () {
-            console.log('Connecté au broker MQTT');
-            client.subscribe("Average/CO2"); // Abonnement au topic CO2
-            client.subscribe("Average/Temperature");
-            client.subscribe("Average/Light");
-            client.subscribe("Average/PeopleCount");
-        });
-
-        // Lors de la réception des messages, mettez à jour la page
-        client.on('message', function (topic, message) {
-            // Message reçu sur le topic "Average/CO2"
-            if (topic === "Average/CO2") {
-                const co2Value = parseFloat(message.toString()); // Convertir la valeur du message en un nombre
-                const co2Element = document.getElementById("co2");
-
-                if (co2Element) {
-                    co2Element.textContent = co2Value; // Afficher la valeur du CO₂
-                }
-
-                // Vérifier si le CO₂ dépasse 25 ppm et afficher l'alerte modale
-                if (co2Value > 25) {
-                    console.log(`Alerte CO₂ : ${co2Value} ppm dépassé le seuil`);
-                    showAlert(); // Afficher l'alerte modale directement sur la page
-                }
-            }
-
-            // Mettez à jour les autres paramètres
-            if (topic === "Average/Temperature") {
-                const temperatureElement = document.getElementById("temperature");
-                if (temperatureElement) {
-                    temperatureElement.textContent = message.toString(); // Affiche la température
-                }
-            }
-
-            if (topic === "Average/Light") {
-                const lightElement = document.getElementById("light");
-                if (lightElement) {
-                    lightElement.textContent = message.toString(); // Affiche la luminosité
-                }
-            }
-
-            if (topic === "Average/PeopleCount") {
-                const peopleCountElement = document.getElementById("peopleCount");
-                if (peopleCountElement) {
-                    peopleCountElement.textContent = message.toString(); // Affiche le nombre de personnes
-                }
-            }
-        });
-
-        // Fonction pour afficher l'alerte modale
-        function showAlert() {
-            const alertModal = document.getElementById("alertModal");
-            alertModal.style.display = "flex";  // Afficher l'alerte modale
-        }
-
-        // Fonction pour fermer l'alerte modale
-        function closeAlert() {
-            const alertModal = document.getElementById("alertModal");
-            alertModal.style.display = "none";  // Cacher l'alerte modale
-        }
-
-        // Ajout de l'événement pour fermer l'alerte lorsque l'utilisateur clique sur "Fermer l'alerte"
-        document.getElementById("closeAlertBtn").addEventListener("click", closeAlert);
-
-        // Fonction pour envoyer la demande de monitoring (envoi des paramètres)
-        function sendPageMonitoringRequest() {
-            if (client.connected) {
-                console.log("Envoi de la demande de monitoring...");
-                client.publish("Signal/PageMonitoring", JSON.stringify({ request: "data" }), function (err) {
-                    if (err) {
-                        console.error("Erreur lors de l'envoi de la demande de monitoring :", err);
-                    } else {
-                        console.log("Demande de monitoring envoyée");
-                    }
-                });
-            } else {
-                console.error("Le client MQTT n'est pas connecté au broker. Réessai dans 1 seconde...");
-                setTimeout(sendPageMonitoringRequest, 1000); // Réessayer après 1 seconde
-            }
-        }
-
-        // Gestion des erreurs de connexion MQTT
-        client.on('error', function (err) {
-            console.error('Erreur de connexion au broker MQTT :', err.message);
-        });
-    </script>
 </body>
 </html>
