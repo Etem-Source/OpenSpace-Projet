@@ -1,44 +1,153 @@
 // Connexion au broker MQTT
 const client = mqtt.connect("ws://192.168.29.55:9001");
 
+// Variables globales pour stocker les seuils et leur date de réception
+let seuilTemperature = null;
+let seuilTemperatureTimestamp = null;
+
+let seuilLight = null;
+let seuilLightTimestamp = null;
+
+let seuilCO2 = null;
+let seuilCO2Timestamp = null;
+
+// Flags pour éviter alertes répétées
+let alerteTemperatureEnvoyee = false;
+let alerteLightEnvoyee = false;
+let alerteCO2Envoyee = false;
+
+// Durée de validité des seuils en ms (1 heure)
+const SEUIL_VALIDITY_DURATION = 60 * 60 * 1000; // 3600000 ms
+
+// Fonction pour vérifier si un seuil est toujours valide
+function isSeuilValide(timestamp) {
+    if (!timestamp) return false;
+    const now = Date.now();
+    return (now - timestamp) <= SEUIL_VALIDITY_DURATION;
+}
+
+// Fonction générique pour gérer les alertes
+function checkAlert(topic, value, seuil, seuilTimestamp, alerteEnvoyeeFlagName, alertMessage) {
+    if (seuil !== null && !isNaN(value)) {
+        if (!isSeuilValide(seuilTimestamp)) {
+            // Seuil expiré, on ignore l'alerte
+            console.log(`Le seuil ${topic} a expiré, alerte ignorée.`);
+            window[alerteEnvoyeeFlagName] = false; // reset flag pour futur seuil valide
+            return;
+        }
+
+        console.log(`Comparaison ${topic}: ${value} > ${seuil} ?`);
+        if (value > seuil) {
+            console.log(`Seuil ${topic} dépassé !`);
+            if (!window[alerteEnvoyeeFlagName]) {
+                alert(alertMessage);
+                window[alerteEnvoyeeFlagName] = true;
+            }
+        } else {
+            window[alerteEnvoyeeFlagName] = false;
+        }
+    }
+}
+
 client.on('connect', function () {
     console.log('Connecté au broker MQTT');
-    // Abonnement aux topics nécessaires
+    // Abonnement aux topics nécessaires, incluant les seuils
     client.subscribe("user/authentication/response");
     client.subscribe("Average/Temperature");
     client.subscribe("Average/Light");
     client.subscribe("Average/CO2");
     client.subscribe("Average/PeopleCount");
+    client.subscribe("Seuil/Temperature");
+    client.subscribe("Seuil/Light");
+    client.subscribe("Seuil/CO2");
 });
 
 client.on('message', function (topic, message) {
     if (topic === "user/authentication/response") {
         const response = JSON.parse(message.toString());
         if (response.status === "success") {
-            // Redirection vers la page de monitoring
-            window.location.href = "monitoring.html";
+            // Envoi la demande des données puis redirige après 1s
+            sendPageMonitoringRequest();
+            setTimeout(() => {
+                window.location.href = "monitoring.html";
+            }, 1000);
         } else {
             const loginError = document.getElementById('loginError');
             if (loginError) {
                 loginError.textContent = 'Identifiants incorrects.';
             }
         }
-    } else if (topic === "Average/Temperature") {
+    } 
+    else if (topic === "Seuil/Temperature") {
+        seuilTemperature = Number(message.toString());
+        seuilTemperatureTimestamp = Date.now();
+        console.log("Seuil Température reçu :", seuilTemperature, typeof seuilTemperature);
+    } 
+    else if (topic === "Seuil/Light") {
+        seuilLight = Number(message.toString());
+        seuilLightTimestamp = Date.now();
+        console.log("Seuil Luminosité reçu :", seuilLight, typeof seuilLight);
+    } 
+    else if (topic === "Seuil/CO2") {
+        seuilCO2 = Number(message.toString());
+        seuilCO2Timestamp = Date.now();
+        console.log("Seuil CO2 reçu :", seuilCO2, typeof seuilCO2);
+    } 
+    else if (topic === "Average/Temperature") {
+        const temperatureValue = Number(message.toString());
+        console.log("Temperature reçue :", temperatureValue, typeof temperatureValue);
+
         const temperatureElement = document.getElementById("temperature");
         if (temperatureElement) {
-            temperatureElement.textContent = message.toString();
+            temperatureElement.textContent = temperatureValue;
         }
-    } else if (topic === "Average/Light") {
+
+        checkAlert(
+            "Température",
+            temperatureValue,
+            seuilTemperature,
+            seuilTemperatureTimestamp,
+            "alerteTemperatureEnvoyee",
+            `Alerte Température ! La température (${temperatureValue}°C) dépasse le seuil autorisé (${seuilTemperature}°C).`
+        );
+    } 
+    else if (topic === "Average/Light") {
+        const lightValue = Number(message.toString());
+        console.log("Luminosité reçue :", lightValue, typeof lightValue);
+
         const lightElement = document.getElementById("light");
         if (lightElement) {
-            lightElement.textContent = message.toString();
+            lightElement.textContent = lightValue;
         }
-    } else if (topic === "Average/CO2") {
+
+        checkAlert(
+            "Luminosité",
+            lightValue,
+            seuilLight,
+            seuilLightTimestamp,
+            "alerteLightEnvoyee",
+            `Alerte Luminosité ! Le niveau de luminosité (${lightValue} lux) est trop élevé (seuil : ${seuilLight} lux).`
+        );
+    } 
+    else if (topic === "Average/CO2") {
+        const co2Value = Number(message.toString());
+        console.log("CO2 reçu :", co2Value, typeof co2Value);
+
         const co2Element = document.getElementById("co2");
         if (co2Element) {
-            co2Element.textContent = message.toString();
+            co2Element.textContent = co2Value;
         }
-    } else if (topic === "Average/PeopleCount") {
+
+        checkAlert(
+            "CO2",
+            co2Value,
+            seuilCO2,
+            seuilCO2Timestamp,
+            "alerteCO2Envoyee",
+            `Alerte CO₂ ! Le niveau de CO₂ (${co2Value}) a dépassé le seuil autorisé (${seuilCO2}).`
+        );
+    } 
+    else if (topic === "Average/PeopleCount") {
         const peopleCountElement = document.getElementById("peopleCount");
         if (peopleCountElement) {
             peopleCountElement.textContent = message.toString();
@@ -54,7 +163,6 @@ client.on('error', function (err) {
     }
 });
 
-// Fonction pour envoyer les informations d'authentification
 function loginUser(username, password) {
     const loginData = {
         username: username,
@@ -77,25 +185,43 @@ function loginUser(username, password) {
         }
     }
 }
-
-// Fonction pour demander les données de monitoring
-function sendPageMonitoringRequest() {
+function sendSignalSeuils() {
     if (client.connected) {
-        console.log("Envoi de la demande de monitoring...");
-        client.publish("Signal/PageMonitoring", JSON.stringify({ request: "data" }), function (err) {
+        client.publish("Signal/Seuils", JSON.stringify({}), function(err) {
             if (err) {
-                console.error("Erreur lors de l'envoi de la demande de monitoring :", err);
+                console.error("Erreur lors de l'envoi du message 'Signal/Seuils' :", err);
             } else {
-                console.log("Demande de monitoring envoyée");
+                console.log("Message 'Signal/Seuils' publié");
+                // Dès que le message est publié, on lance la demande de monitoring (après 5s)
+                sendPageMonitoringRequest();
             }
         });
     } else {
-        console.error("Le client MQTT n'est pas connecté au broker. Réessai dans 1 seconde...");
-        setTimeout(sendPageMonitoringRequest, 1000); // Réessayer après 1 seconde
+        console.error("Le client MQTT n'est pas connecté. Réessai dans 1 seconde...");
+        setTimeout(sendSignalSeuils, 1000);
     }
 }
 
-// Fonction pour publier la température actualisée
+function sendPageMonitoringRequest() {
+    setTimeout(() => {
+        if (client.connected) {
+            console.log("Envoi de la demande de monitoring...");
+            client.publish("Signal/PageMonitoring", JSON.stringify({ request: "data" }), function (err) {
+                if (err) {
+                    console.error("Erreur lors de l'envoi de la demande de monitoring :", err);
+                } else {
+                    console.log("Demande de monitoring envoyée");
+                }
+            });
+        } else {
+            console.error("Le client MQTT n'est pas connecté au broker. Réessai dans 1 seconde...");
+            setTimeout(sendPageMonitoringRequest, 1000);
+        }
+    }, 5000);
+}
+
+
+
 function updateTemperature() {
     const temperatureThreshold = document.getElementById('temperatureThreshold').value;
 
@@ -117,40 +243,22 @@ function updateTemperature() {
     }
 }
 
-// Fonction pour publier le CO2 actualisé et afficher l'alerte si le seuil est dépassé
 function updateCO2() {
-    // Récupérer la valeur du seuil de CO₂
     const co2Threshold = document.getElementById('co2Threshold').value;
 
-    // Vérifier si la valeur de CO₂ est définie
     if (!co2Threshold) {
         console.warn("Veuillez saisir une valeur pour le CO2.");
         return;
     }
 
-    // Convertir la valeur de CO₂ en nombre (au cas où l'utilisateur entre une valeur sous forme de chaîne)
     const co2Value = parseFloat(co2Threshold);
 
-    // Vérifier si la valeur de CO₂ est valide
     if (isNaN(co2Value)) {
         console.error("La valeur saisie pour le CO2 n'est pas un nombre valide.");
         return;
     }
 
-    // Vérifier si le seuil de CO₂ dépasse 25 ppm et afficher une alerte
-    if (co2Value > 25) {
-        alert(`Alerte : Le niveau de CO₂ (${co2Value} ppm) dépasse le seuil de 25 ppm.`);
-        
-        // Rediriger vers la page d'alerte
-        window.location.href = 'alerte.html';  // Redirection vers la page alerte.html
-    } else {
-        // Masquer l'alerte si le CO₂ est inférieur ou égal à 25 ppm
-        document.getElementById('alert').style.display = 'none';
-    }
-
-    // Vérifier la connexion MQTT
     if (client.connected) {
-        // Publier la valeur du seuil de CO₂ sur le broker MQTT
         client.publish("Seuil/CO2", co2Threshold, function (err) {
             if (err) {
                 console.error("Erreur lors de l'envoi du CO2 :", err);
@@ -163,8 +271,6 @@ function updateCO2() {
     }
 }
 
-
-// Fonction pour publier la luminosité actualisée
 function updateLight() {
     const lightThreshold = document.getElementById('lightThreshold').value;
 
@@ -197,25 +303,18 @@ if (loginForm) {
     });
 }
 
-// Gestionnaires d'événements pour les boutons de seuils
-const updateTemperatureButton = document.getElementById('updateTemperatureButton');
-if (updateTemperatureButton) {
-    updateTemperatureButton.addEventListener('click', function () {
-        updateTemperature();
-    });
+// Gestionnaires d'événements pour les boutons de seuils (si présents)
+const tempButton = document.getElementById('updateTemperatureBtn');
+if (tempButton) {
+    tempButton.addEventListener('click', updateTemperature);
 }
 
-const updateCO2Button = document.getElementById('updateCO2Button');
-if (updateCO2Button) {
-    updateCO2Button.addEventListener('click', function () {
-        updateCO2();
-    });
+const co2Button = document.getElementById('updateCO2Btn');
+if (co2Button) {
+    co2Button.addEventListener('click', updateCO2);
 }
 
-const updateLightButton = document.getElementById('updateLightButton');
-if (updateLightButton) {
-    updateLightButton.addEventListener('click', function () {
-        updateLight();
-    });
+const lightButton = document.getElementById('updateLightBtn');
+if (lightButton) {
+    lightButton.addEventListener('click', updateLight);
 }
-
