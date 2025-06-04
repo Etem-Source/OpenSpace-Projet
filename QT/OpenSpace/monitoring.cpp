@@ -12,12 +12,12 @@
 
 Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setAlignment(Qt::AlignTop); // ✅ Titres remontés
+    mainLayout->setAlignment(Qt::AlignTop);
     this->setStyleSheet("background-color: #D3D3D3; padding: 30px;");
 
     networkManager = new QNetworkAccessManager(this);
     updateTimer = new QTimer(this);
-    connect(updateTimer, &QTimer::timeout, this, &Monitoring::fetchThresholds);
+    connect(updateTimer, &QTimer::timeout, this, &Monitoring::fetchData);
     updateTimer->start(20000);
 
     QLabel *titleLabel = new QLabel("Monitoring de l'Open-Space");
@@ -31,7 +31,7 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
     mainLayout->addWidget(subtitleLabel);
 
     QGridLayout *gridLayout = new QGridLayout();
-    gridLayout->setSpacing(25); // ✅ Espacement optimisé
+    gridLayout->setSpacing(25);
 
     temperatureLabel = new QLabel("Température");
     temperatureValue = new QLabel("0 °C");
@@ -49,6 +49,7 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
     peopleValue = new QLabel("0");
     peopleThreshold = new QLabel("Seuil : 50");
 
+    // Modification ici : plus de label moyenne, on affiche juste titre, valeur et seuil
     auto createBlock = [](QLabel* title, QLabel* value, QLabel* threshold) {
         QWidget *box = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout(box);
@@ -69,10 +70,8 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
 
     mainLayout->addLayout(gridLayout);
 
-    // ✅ Ajout d'un espace avant les boutons
     mainLayout->addSpacing(30);
 
-    // ✅ Boutons bien centrés en bas et plus compacts
     QPushButton *gestionButton = new QPushButton("Gestion");
     QPushButton *reservationsButton = new QPushButton("Réservations");
     QPushButton *logoutButton = new QPushButton("Déconnexion");
@@ -84,7 +83,7 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
     logoutButton->setStyleSheet("background-color: #DC3545; color: white; border-radius: 12px; padding: 14px; font-size: 16px; min-width: 230px;");
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->setSpacing(20); // ✅ Espacement ajusté
+    buttonLayout->setSpacing(20);
     buttonLayout->addWidget(gestionButton);
     buttonLayout->addWidget(logsButton);
     buttonLayout->addWidget(reservationsButton);
@@ -92,7 +91,6 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
 
     mainLayout->addLayout(buttonLayout);
 
-    // ✅ Connexion des boutons aux signaux de navigation
     connect(gestionButton, &QPushButton::clicked, this, &Monitoring::goToGestion);
     connect(logsButton, &QPushButton::clicked, this, &Monitoring::goToLogs);
     connect(reservationsButton, &QPushButton::clicked, this, &Monitoring::goToReservations);
@@ -104,6 +102,48 @@ Monitoring::Monitoring(QWidget *parent) : QWidget(parent) {
 Monitoring::~Monitoring() {
     delete networkManager;
     delete updateTimer;
+}
+
+void Monitoring::fetchData() {
+    QUrl url("http://localhost:3000/get-data");
+    QNetworkRequest request(url);
+    QNetworkReply *reply = networkManager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        onDataReceived(reply);
+    });
+}
+
+void Monitoring::onDataReceived(QNetworkReply *reply) {
+    if (!reply) return;
+
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray responseData = reply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
+        QJsonObject jsonObj = jsonDoc.object();
+
+        QJsonObject thresholds = jsonObj["thresholds"].toObject();
+        QJsonObject averages = jsonObj["averages"].toObject();
+
+        temperatureValue->setText(averages["temperature"].toString() + " °C");
+        // plus de moyenne affichée, on ne met pas de texte dans les labels moyenne
+
+        lightValue->setText(averages["light"].toString() + " Lux");
+
+        co2Value->setText(averages["co2"].toString() + " ppm");
+
+        peopleValue->setText(averages["people_count"].toString());
+
+        temperatureThreshold->setText("Seuil : " + thresholds["temperature"].toString() + " °C");
+        lightThreshold->setText("Seuil : " + thresholds["light"].toString() + " Lux");
+        co2Threshold->setText("Seuil : " + thresholds["co2"].toString() + " ppm");
+        peopleThreshold->setText("Seuil : " + thresholds["people_count"].toString());
+
+        qDebug() << "✅ Données mises à jour automatiquement : " << jsonObj;
+    } else {
+        qWarning() << "❌ Erreur lors de la requête des données : " << reply->errorString();
+    }
+
+    reply->deleteLater();
 }
 
 void Monitoring::fetchThresholds() {
@@ -123,22 +163,14 @@ void Monitoring::onThresholdsReceived(QNetworkReply *reply) {
         QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
         QJsonObject jsonObj = jsonDoc.object();
 
-        temperatureValue->setText(jsonObj["temperature"].toString() + " °C");
         temperatureThreshold->setText("Seuil : " + jsonObj["temperature"].toString() + " °C");
-
-        lightValue->setText(jsonObj["light"].toString() + " Lux");
         lightThreshold->setText("Seuil : " + jsonObj["light"].toString() + " Lux");
-
-        co2Value->setText(jsonObj["co2"].toString() + " ppm");
         co2Threshold->setText("Seuil : " + jsonObj["co2"].toString() + " ppm");
-
-        peopleValue->setText(jsonObj["people_count"].toString());
         peopleThreshold->setText("Seuil : " + jsonObj["people_count"].toString());
 
-        qDebug() << "✅ Seuils mis à jour automatiquement : " << jsonObj;
+        qDebug() << "✅ Seuils mis à jour : " << jsonObj;
     } else {
-        qWarning() << "❌ Erreur lors de la requête des seuils : " << reply->errorString();
+        qWarning() << "❌ Erreur lors de la récupération des seuils : " << reply->errorString();
     }
-
     reply->deleteLater();
 }
