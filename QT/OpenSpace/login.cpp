@@ -9,6 +9,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDebug>
+#include <QScreen>
+#include <QApplication>
 
 Login::Login(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -61,6 +63,7 @@ Login::Login(QWidget *parent) : QWidget(parent) {
 
     setLayout(mainLayout);
     networkManager = new QNetworkAccessManager(this);
+
 }
 
 Login::~Login() {
@@ -119,3 +122,4 @@ void Login::onReplyReceived(QNetworkReply *reply) {
 
     reply->deleteLater();
 }
+
