@@ -14,7 +14,7 @@ class Monitoring : public QWidget {
 
 public:
     explicit Monitoring(QWidget *parent = nullptr);
-    ~Monitoring();  // ✅ Ajout du destructeur
+    ~Monitoring();
 
 signals:
     void goToGestion();
@@ -23,10 +23,12 @@ signals:
     void goToLogin();
 
 public slots:
-    void fetchThresholds();  // ✅ Fonction publique pour mise à jour des seuils
+    void fetchThresholds();
 
 private slots:
-    void onThresholdsReceived(QNetworkReply *reply);  // ✅ Fonction de traitement des données
+    void onThresholdsReceived(QNetworkReply *reply);
+    void fetchData();
+    void onDataReceived(QNetworkReply* reply);
 
 private:
     QNetworkAccessManager *networkManager;
@@ -47,6 +49,11 @@ private:
     QLabel *peopleCountLabel;
     QLabel *peopleValue;
     QLabel *peopleThreshold;
+
+    QLabel *temperatureAverage;
+    QLabel *lightAverage;
+    QLabel *co2Average;
+    QLabel *peopleAverage;
 };
 
 #endif // MONITORING_H
